@@ -23,5 +23,21 @@ def majority_party_size(n, same_party):
         more than half of the delegates belong to the same party.
     """
 
-    # Replace the following line with your code.
-    return 1
+    # Dict of delegates arranged by parties
+    parties = {0: [0]}
+
+    for curr_person in range(1,n):
+        print(f"Checking person {curr_person}")
+        in_known_party = False
+        for party in parties:
+            print(f"  against party {party}")
+            if same_party(curr_person, parties[party][0]):
+                parties[party].append(curr_person)
+                in_known_party = True
+                break
+
+        if not in_known_party:
+            parties[len(parties)] = [curr_person]
+
+    print(f"\nParties dict:")
+    print(parties)
