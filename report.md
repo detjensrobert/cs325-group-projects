@@ -21,7 +21,8 @@ We start by creating a dictionary with the first member as party 0. We then take
 In pseudocode:
 
 ```
-create new dictionary with just the first member alone in a party
+create new dictionary
+add first member to new party/entry in dict
 for each delegate:
   for each party in dict:
     is this delegate in the same party as one from this party?
