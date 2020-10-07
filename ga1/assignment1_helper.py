@@ -18,7 +18,7 @@ def run_majority_party_size(input_file_path, output_file_path):
 
         with open(output_file_path, "w") as outfile:
             outfile.write(
-                "{} {}".format(
+                "Size of the majority party: {}\nNumber of compares: {}".format(
                     str(
                         assignment1.majority_party_size(
                             __number_of_delegates, same_party
