@@ -25,19 +25,29 @@ def majority_party_size(n, same_party):
 
     # Dict of delegates arranged by parties
     parties = {0: [0]}
+    largest_party_size = 0
 
-    for curr_person in range(1,n):
-        print(f"Checking person {curr_person}")
+    for curr_person in range(1, n):
         in_known_party = False
+
         for party in parties:
-            print(f"  against party {party}")
+            # is this person in a known party?
             if same_party(curr_person, parties[party][0]):
+                # if so, add them to that party
                 parties[party].append(curr_person)
                 in_known_party = True
+
+                # check if this is now the largest party
+                if len(parties[party]) > largest_party_size:
+                    largest_party_size = len(parties[party])
+
                 break
 
+        # if not, add them to a new party
         if not in_known_party:
             parties[len(parties)] = [curr_person]
 
-    print(f"\nParties dict:")
+    print(f"Parties dict:")
     print(parties)
+
+    return largest_party_size

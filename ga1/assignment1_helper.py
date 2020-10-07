@@ -1,4 +1,5 @@
 import assignment1
+import math
 
 """
     This file contains helper functions for assignemnt1.  You should not need to edit
@@ -18,7 +19,7 @@ def run_majority_party_size(input_file_path, output_file_path):
 
         with open(output_file_path, "w") as outfile:
             outfile.write(
-                "Size of the majority party: {}\nNumber of compares: {}".format(
+                "{} {}".format(
                     str(
                         assignment1.majority_party_size(
                             __number_of_delegates, same_party
@@ -27,6 +28,18 @@ def run_majority_party_size(input_file_path, output_file_path):
                     str(__number_of_queries),
                 )
             )
+
+        print(
+            """
+            Size of the majority party: {}
+            Number of compares:   {}
+            Ideal no of compares: {}
+            """.format(
+                str(assignment1.majority_party_size(__number_of_delegates, same_party)),
+                str(__number_of_queries / 2),
+                __number_of_delegates * math.log(__number_of_delegates),
+            )
+        )
 
 
 def same_party(x, y):
