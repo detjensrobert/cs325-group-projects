@@ -17,14 +17,14 @@ def run_majority_party_size(input_file_path, output_file_path):
         __number_of_delegates = len(__delegate_parties)
         __number_of_queries = 0
 
+        majority_size = assignment1.majority_party_size(
+            __number_of_delegates, same_party
+        )
+
         with open(output_file_path, "w") as outfile:
             outfile.write(
                 "{} {}".format(
-                    str(
-                        assignment1.majority_party_size(
-                            __number_of_delegates, same_party
-                        )
-                    ),
+                    str(majority_size),
                     str(__number_of_queries),
                 )
             )
@@ -35,8 +35,8 @@ def run_majority_party_size(input_file_path, output_file_path):
             Number of compares:   {}
             Ideal no of compares: {}
             """.format(
-                str(assignment1.majority_party_size(__number_of_delegates, same_party)),
-                str(__number_of_queries / 2),
+                str(majority_size),
+                str(__number_of_queries),
                 __number_of_delegates * math.log(__number_of_delegates),
             )
         )
