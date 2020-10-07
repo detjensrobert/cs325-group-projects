@@ -47,7 +47,4 @@ def majority_party_size(n, same_party):
         if not in_known_party:
             parties[len(parties)] = [curr_person]
 
-    print(f"Parties dict:")
-    print(parties)
-
     return largest_party_size

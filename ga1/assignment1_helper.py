@@ -1,59 +1,40 @@
-import assignment1
+#!/usr/bin/env python3
 import math
+import random
 
-"""
-    This file contains helper functions for assignemnt1.  You should not need to edit
-    this file, except for the last line when you test your algorithm.
+import assignment1
 
-    I will use <python3> to run this code.
-"""
-
-
-def run_majority_party_size(input_file_path, output_file_path):
-    global __delegate_parties, __number_of_delegates, __number_of_queries
-
-    with open(input_file_path) as infile:
-        __delegate_parties = [int(x) for x in infile.readline().split()]
-        __number_of_delegates = len(__delegate_parties)
-        __number_of_queries = 0
-
-        majority_size = assignment1.majority_party_size(
-            __number_of_delegates, same_party
-        )
-
-        with open(output_file_path, "w") as outfile:
-            outfile.write(
-                "{} {}".format(
-                    str(majority_size),
-                    str(__number_of_queries),
-                )
-            )
-
-        print(
-            """
-            Size of the majority party: {}
-            Number of compares:   {}
-            Ideal no of compares: {}
-            """.format(
-                str(majority_size),
-                str(__number_of_queries),
-                __number_of_delegates * math.log(__number_of_delegates),
-            )
-        )
-
+### Helper functions for Group Assignment 1
 
 def same_party(x, y):
-    global __number_of_queries
-    __number_of_queries += 1
+    global number_of_queries
+    number_of_queries += 1
 
-    if x < 0 or y < 0 or x >= __number_of_delegates or y >= __number_of_delegates:
+    if x < 0 or y < 0 or x >= number_of_delegates or y >= number_of_delegates:
         return None
-    return __delegate_parties[x] == __delegate_parties[y]
+    return delegate_parties[x] == delegate_parties[y]
 
 
-"""
-    To test your function, you can fill the following command with the the input/output
-    files paths that you want to read from/write to.  Then, you implement <majority_party_size>
-    in the assignment1.py.
-"""
-run_majority_party_size("test00.in", "test00.out")
+## MEGA SUPER ULTRA TEST CASE GENERATOR 9000
+# tests your algorithm against 10 arrays on increasing size
+for i in range(10, 100, 10):
+
+    # generate a list of half random values, half 1's
+    # (this follows the one-party-majority constraint)
+    test_arr = [random.randint(1, 10) for _ in range(i)]
+    test_arr.extend([1 for _ in range(i)])
+    random.shuffle(test_arr)
+
+    # set up the global variables
+    delegate_parties = [int(x) for x in test_arr]
+    number_of_delegates = len(delegate_parties)
+    number_of_queries = 0
+
+    majority_size = assignment1.majority_party_size(number_of_delegates, same_party)
+
+    print(f"""
+Testing against {test_arr}:
+    Size of the majority:  {majority_size} of {number_of_delegates} ({round(majority_size/number_of_delegates * 100)}%)
+    Number of compares:    {number_of_queries}
+    Ideal num (n log(n)):  {number_of_delegates * math.log(number_of_delegates)}
+    """)
