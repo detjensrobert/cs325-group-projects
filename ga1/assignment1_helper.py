@@ -16,7 +16,7 @@ def same_party(x, y):
 
 
 ## MEGA SUPER ULTRA TEST CASE GENERATOR 9000
-# tests your algorithm against 10 arrays on increasing size
+# tests your algorithm against 10 arrays of increasing size
 for i in range(10, 100, 10):
 
     # generate a list of half random values, half 1's
