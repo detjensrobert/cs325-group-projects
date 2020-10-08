@@ -20,13 +20,13 @@ def same_party(x, y):
 for i in range(10, 100, 10):
     # generate a list of 50% to 75% 1's
     # (this follows the one-party-majority constraint)
-    variance = random.randint(0,int(i/2))
-    test_arr = [random.randint(1, 10) for _ in range(i - variance)]
-    test_arr.extend([1 for _ in range(i + variance)])
-    random.shuffle(test_arr)
+    # variance = random.randint(0,int(i/2))
+    # test_arr = [random.randint(1, 10) for _ in range(i - variance)]
+    # test_arr.extend([1 for _ in range(i + variance)])
+    # random.shuffle(test_arr)
     # linear array
-    # test_arr = list(range(i))
-    # test_arr.extend([1 for _ in range(i)])
+    test_arr = list(range(i))
+    test_arr.extend([1 for _ in range(i)])
 
     # set up the global variables
     delegate_parties = [int(x) for x in test_arr]

@@ -25,7 +25,6 @@ def majority_party_size(n, same_party):
 
     # Dict of delegates arranged by parties
     parties = {0: [0]}
-    largest_party_size = 0
 
     for curr_person in range(1, n):
         in_known_party = False
@@ -38,8 +37,9 @@ def majority_party_size(n, same_party):
                 in_known_party = True
 
                 # check if this is now the largest party
-                if len(parties[party]) > largest_party_size:
-                    largest_party_size = len(parties[party])
+                # and move it to the front if so
+                if party != 0 and len(parties[party]) > len(parties[0]):
+                    move_to_front(parties, party)
 
                 break
 
@@ -47,4 +47,11 @@ def majority_party_size(n, same_party):
         if not in_known_party:
             parties[len(parties)] = [curr_person]
 
-    return largest_party_size
+    return len(parties[0])
+
+
+def move_to_front(hash, id):
+    temp = hash[id]
+    for i in range(id, 0, -1):
+        hash[i] = hash[i-1]
+    hash[0] = temp
