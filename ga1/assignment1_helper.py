@@ -23,10 +23,12 @@ for i in range(10, 100, 10):
     # variance = random.randint(0,int(i/2))
     # test_arr = [random.randint(1, 10) for _ in range(i - variance)]
     # test_arr.extend([1 for _ in range(i + variance)])
-    # random.shuffle(test_arr)
+
     # linear array
     test_arr = list(range(i))
     test_arr.extend([1 for _ in range(i)])
+
+    random.shuffle(test_arr)
 
     # set up the global variables
     delegate_parties = [int(x) for x in test_arr]
@@ -39,5 +41,5 @@ for i in range(10, 100, 10):
 Testing against {test_arr}:
     Size of the majority:  {majority_size} of {number_of_delegates} ({round(majority_size/number_of_delegates * 100)}%)
     Number of compares:    {number_of_queries}
-    Ideal num (n log(n)):  {number_of_delegates * math.log(number_of_delegates)}
+    Ideal num (n log(n)):  {2 * number_of_delegates * math.log(number_of_delegates) / math.log(2)}
     """)
