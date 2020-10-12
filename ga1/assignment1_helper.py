@@ -40,9 +40,8 @@ for i in range(10, 100, 10):
 
     nlogn = number_of_delegates * math.log(number_of_delegates) / math.log(2)
     print(f"""
-Testing against {test_arr}:
-    Size of the majority:  {majority_size} of {number_of_delegates} ({round(majority_size/number_of_delegates * 100)}%)
-    Number of compares:    {number_of_queries}
-    Ideal num (n log(n)):  {nlogn}
-    Runtime ratio:         {number_of_queries / nlogn}
-    """)
+    Testing against {test_arr}: 
+    Size of the majority:  {majority_size} of {number_of_delegates} ({round(majority_size/number_of_delegates * 100)}%) 
+    Number of compares:    {number_of_queries} 
+    Ideal num (n log(n)):  {nlogn} 
+    Runtime ratio:         {number_of_queries / nlogn} """)

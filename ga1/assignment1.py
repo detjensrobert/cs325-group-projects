@@ -12,7 +12,7 @@
 """
 
 
-def majority_party_size(n, same_party):
+def majority_party_size_helper(n, same_party):
     """
     n (int): number of people in the room.
     same_party (func(int, int)): This function determines if two delegates
@@ -22,28 +22,34 @@ def majority_party_size(n, same_party):
     return: The number of delegates in the majority party.  You can assume
         more than half of the delegates belong to the same party.
     """
+    #Tuple format (candidate number, list of candidates, max size)
 
     if type(n) == int:
-        n = [i for i in range(n)]
-
-    if len(n) > 0:
-        mid = round(len(n)/2)
-        left = majority_party_size(n[:mid], same_party)
-        right = majority_party_size(n[mid+1:], same_party)
+        n = (2, [i for i in range(n)], 0)
+    # print(n)
+    if len(n[1]) > 2:
+        mid = int(len(n[1])/2)
+        left = majority_party_size_helper((n[0], n[1][:mid], n[2]), same_party)
+        right = majority_party_size_helper((n[0], n[1][mid+1:], n[2]), same_party)
 
         left_same = 0
         right_same = 0
-
-        for i in range(len(n)):
-            if same_party(left, i):
+        for i in range(len(n[1])):
+            if same_party(left[0], i):
                 left_same += 1
-            if same_party(right, i):
+            if same_party(right[0], i):
                 right_same += 1
 
-        return max(left_same, right_same)
+        if left_same > right_same:
+            x = left[0]
+        else:
+            x = right[0]
+        return (x, n, max(left_same, right_same))
     else:
-        return 0
+        return (n[1][0], n[1], 1)
 
+def majority_party_size(n, same_party):
+    return majority_party_size_helper(n, same_party)[2]
 
 """
 recurse down until subarrays of <=2 elems
