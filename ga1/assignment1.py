@@ -22,15 +22,15 @@ def majority_party_size_helper(n, same_party):
     return: The number of delegates in the majority party.  You can assume
         more than half of the delegates belong to the same party.
     """
-    #Tuple format (candidate number, list of candidates, max size)
+    # Tuple format (candidate number, list of candidates, max size)
 
     if type(n) == int:
         n = (2, [i for i in range(n)], 0)
     # print(n)
     if len(n[1]) > 2:
-        mid = int(len(n[1])/2)
+        mid = int(len(n[1]) / 2)
         left = majority_party_size_helper((n[0], n[1][:mid], n[2]), same_party)
-        right = majority_party_size_helper((n[0], n[1][mid+1:], n[2]), same_party)
+        right = majority_party_size_helper((n[0], n[1][mid + 1:], n[2]), same_party)
 
         left_same = 0
         right_same = 0
@@ -48,12 +48,6 @@ def majority_party_size_helper(n, same_party):
     else:
         return (n[1][0], n[1], 1)
 
+
 def majority_party_size(n, same_party):
     return majority_party_size_helper(n, same_party)[2]
-
-"""
-recurse down until subarrays of <=2 elems
-compare first pair with next layer up
-  pair: cand[0] and cand[1]
-  see which cand has majority in the previous level
-"""

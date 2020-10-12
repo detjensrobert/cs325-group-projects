@@ -6,6 +6,7 @@ import assignment1
 
 ### Helper functions for Group Assignment 1
 
+
 def same_party(x, y):
     global number_of_queries
     number_of_queries += 1
@@ -20,7 +21,7 @@ def same_party(x, y):
 for i in range(10, 100, 10):
     # generate a list of 50% to 75% 1's
     # (this follows the one-party-majority constraint)
-    variance = random.randint(0,int(i/2))
+    variance = random.randint(0, int(i / 2))
     test_arr = [random.randint(1, 10) for _ in range(i - variance)]
     test_arr.extend([1 for _ in range(i + variance)])
 
@@ -40,8 +41,9 @@ for i in range(10, 100, 10):
 
     nlogn = number_of_delegates * math.log(number_of_delegates) / math.log(2)
     print(f"""
-    Testing against {test_arr}: 
-    Size of the majority:  {majority_size} of {number_of_delegates} ({round(majority_size/number_of_delegates * 100)}%) 
-    Number of compares:    {number_of_queries} 
-    Ideal num (n log(n)):  {nlogn} 
-    Runtime ratio:         {number_of_queries / nlogn} """)
+Testing against {test_arr}:
+    Size of the majority:  {majority_size} of {number_of_delegates} ({round(majority_size/number_of_delegates * 100)}%)
+    Number of compares:    {number_of_queries}
+    Ideal num (n log(n)):  {nlogn}
+    Runtime ratio:         {number_of_queries / nlogn}
+    """)
