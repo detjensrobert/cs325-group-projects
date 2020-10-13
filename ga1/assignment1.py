@@ -29,26 +29,29 @@ def majority_party_size_helper(delegates, same_party):
     # PARAM: delegates[] = indexes of delegates to check
     # RETURN: tuple(index of majority party candidate, size of majority party)
 
-    if len(delegates) > 2:
-        # recursively check each half of our candidate list (n[1]) to find the majority of each half
+    if len(delegates) >= 2:
+        # recursively check each half of our delegate list to find the majority party of each half
         mid = int(len(delegates) / 2)
-        left = majority_party_size_helper(delegates[:mid], same_party)
-        right = majority_party_size_helper(delegates[mid:], same_party)
+        (left_delegate, _) = majority_party_size_helper(delegates[:mid], same_party)
+        (right_delegate, _) = majority_party_size_helper(delegates[mid:], same_party)
 
-        # See which side's majority is the majority for our whole chunk
-        left_same = 0
-        right_same = 0
+        # Count up the size of each half's majority party for the whole chunk
+        left_party_size = 0
+        right_party_size = 0
         for i in delegates:
-            if same_party(left[0], i):
-                left_same += 1
-            if same_party(right[0], i):
-                right_same += 1
+            if same_party(left_delegate, i):
+                left_party_size += 1
+            if same_party(left_delegate, i):
+                right_party_size += 1
 
-        if left_same > right_same:
-            x = left[0]
+        # who's bigger?
+        if left_party_size > right_party_size:
+            maj_delegate = left_delegate
+            maj_size = left_party_size
         else:
-            x = right[0]
+            maj_delegate = right_delegate
+            maj_size = right_party_size
 
-        return (x, max(left_same, right_same))
-    else:
+        return (maj_delegate, maj_size)
+    else: # Base case: single delegate -- only one possible majority here!
         return (delegates[0], 1)

@@ -18,12 +18,13 @@ def same_party(x, y):
 
 ## MEGA SUPER ULTRA TEST CASE GENERATOR 9000
 # tests your algorithm against 10 arrays of increasing size
-for i in range(100, 1000, 100):
+for i in range(10, 100, 10):
     # generate a list of 50% to 75% 1's
     # (this follows the one-party-majority constraint)
-    variance = random.randint(0, int(i / 2))
-    test_arr = [random.randint(1, 10) for _ in range(i - variance)]
-    test_arr.extend([1 for _ in range(i + variance)])
+    variance1 = random.randint(0, int(i / 2))
+    variance2 = random.randint(0, int(i / 2))
+    test_arr = [random.randint(1, 10) for _ in range(i - variance1)]
+    test_arr.extend([1 for _ in range(i + variance2)])
 
     # linear array
     # test_arr = list(range(i))
@@ -41,7 +42,7 @@ for i in range(100, 1000, 100):
 
     nlogn = number_of_delegates * math.log(number_of_delegates) / math.log(2)
     print(f"""
-Testing against {test_arr[:10]}:
+Testing against {test_arr}:
     Size of the majority:  {majority_size} of {number_of_delegates} ({round(majority_size/number_of_delegates * 100)}%)
     Expected Size:         {test_arr.count(1)}
     Number of compares:    {number_of_queries}

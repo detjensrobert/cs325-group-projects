@@ -14,23 +14,17 @@ Suppose more than half of the delegates belong to the same political party. Desc
 
 ### Description
 
-TLDR: We created a dict of the delegates organized by party and found the party with the most members.
+Our algorithm uses a recursive method to divide and conquer the convention to find the majority in $n\log{n}$ time.
 
-We start by creating a dictionary with the first member as party 0. We then take each member and look through the the current dict to see if they are in the same party as any of the previously-seen members. If they are, add them to the list of delegates from that party, update the majority size if this new list is larger than the current largest, and stop searching. If the delegate is not in any of the known parties, they must be from a new party so create a new entry in the hash for them.
+First, we create a list of all $n$ delegates and call our recursive function on this list so that we can split the delegates up.
 
-In pseudocode:
+The recursive function first halves the list and calls itself on each half to find the majority party and size for each half.
+Once each half has been computed, it looks through its list of delegates and counts how many delegates are in the two majority parties from either half.
+It then returns the size of and a delegate from the party with more people.
 
-```
-create new dictionary
-add first member to new party/entry in dict
-for each delegate:
-  for each party in dict:
-    is this delegate in the same party as one from this party?
-      yes:add them to that party
-          is this party now larger than the previous record?
-          yes:set the new largest size to this one
-      no: keep searching
-  if not in any of the known parties:
-    create new party entry in dict
-    add this member to that party
-```
+If the size of the delegate list passed into the recursive function is length 1, that is our base case.
+We return the first delegate from the party list and a majority size of 1, since that is the only possible outcome for this array.
+
+### Runtime Analysis
+
+bar
