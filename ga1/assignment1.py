@@ -12,7 +12,7 @@
 """
 
 
-def majority_party_size_helper(n, same_party):
+def majority_party_size(n, same_party):
     """
     n (int): number of people in the room.
     same_party (func(int, int)): This function determines if two delegates
@@ -22,19 +22,23 @@ def majority_party_size_helper(n, same_party):
     return: The number of delegates in the majority party.  You can assume
         more than half of the delegates belong to the same party.
     """
-    # Tuple format (candidate number, list of candidates, max size)
+    return majority_party_size_helper([i for i in range(n)], same_party)[1]
 
-    if type(n) == int:
-        n = (2, [i for i in range(n)], 0)
-    # print(n)
-    if len(n[1]) > 2:
-        mid = int(len(n[1]) / 2)
-        left = majority_party_size_helper((n[0], n[1][:mid], n[2]), same_party)
-        right = majority_party_size_helper((n[0], n[1][mid + 1:], n[2]), same_party)
 
+def majority_party_size_helper(delegates, same_party):
+    # PARAM: delegates[] = indexes of delegates to check
+    # RETURN: tuple(index of majority party candidate, size of majority party)
+
+    if len(delegates) > 2:
+        # recursively check each half of our candidate list (n[1]) to find the majority of each half
+        mid = int(len(delegates) / 2)
+        left = majority_party_size_helper(delegates[:mid], same_party)
+        right = majority_party_size_helper(delegates[mid:], same_party)
+
+        # See which side's majority is the majority for our whole chunk
         left_same = 0
         right_same = 0
-        for i in range(len(n[1])):
+        for i in delegates:
             if same_party(left[0], i):
                 left_same += 1
             if same_party(right[0], i):
@@ -44,10 +48,7 @@ def majority_party_size_helper(n, same_party):
             x = left[0]
         else:
             x = right[0]
-        return (x, n, max(left_same, right_same))
+
+        return (x, max(left_same, right_same))
     else:
-        return (n[1][0], n[1], 1)
-
-
-def majority_party_size(n, same_party):
-    return majority_party_size_helper(n, same_party)[2]
+        return (delegates[0], 1)
