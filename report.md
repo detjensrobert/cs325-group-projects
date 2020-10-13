@@ -28,4 +28,4 @@ We return the (only) delegate from the list and a majority size of 1, since that
 
 ### Runtime Analysis
 
-The runtime of this algorithm is similar to merge sort, as we are recursively divide-and-conquering the array in halves. We split the array into halves $\log{n}$ times, and for each array iterate over it to find the largest majority. Every delegate must be compared against the two majority parties (linear process: $O(n)$) at each level of recursion ($\log{n}$ times). This gives us $O(n\log{n})$.
+The runtime of this algorithm is similar to merge sort, as we are recursively divide-and-conquering the array in halves. We split the array into halves $\log{n}$ times, and for each array iterate over it to find the largest majority. Every delegate must be compared against the two majority parties (linear process: $O(n)$) at each level of recursion ($\log{n}$ times). This gives us a runtime of $O(n) * \log{n}$ or $O(n\log{n})$.
