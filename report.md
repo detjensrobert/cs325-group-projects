@@ -19,7 +19,7 @@ Our algorithm uses a recursive method to divide and conquer the convention to fi
 First, we create a list of all $n$ delegates (so that we can split the delegates up) and call our recursive function on this list.
 
 The recursive function first halves the list and calls itself on each half to find the majority party and size for each half.
-Since we know that the there are
+It is guaranteed that one of the two halves has the same majority as the full array, so one of the two majority parties will be the majority for the whole.
 Once each half has been computed, it looks through its list of delegates and counts how many delegates are in the two majority parties from either half.
 It then returns the size of and a delegate from the party with more people.
 
