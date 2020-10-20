@@ -9,7 +9,7 @@ def vankin_max_score(input_file_path, output_file_path):
 
     board = infile.readlines()
     board = [line.strip().split(' ') for line in board]  # split lines into squares
-    board = [list(map(lambda x: int(x), line)) for line in board]  # convert squares to ints
+    board = [list(map(int, line)) for line in board]  # convert squares to ints
 
     print(f"Board size: {board_size}x{board_size}")
     print(board)
