@@ -1,1 +1,1 @@
-# CS325 Group Project 1
+# CS325 Group Projects
