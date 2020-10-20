@@ -1,5 +1,6 @@
 import numpy  # for matrix printing
 
+
 def vankin_max_score(input_file_path, output_file_path):
 
     infile = open(input_file_path, mode="r")
