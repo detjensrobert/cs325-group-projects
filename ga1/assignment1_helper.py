@@ -41,11 +41,13 @@ for i in range(10, 100, 10):
     majority_size = assignment1.majority_party_size(number_of_delegates, same_party)
 
     nlogn = number_of_delegates * math.log(number_of_delegates) / math.log(2)
-    print(f"""
+    print(
+        f"""
 Testing against {test_arr}:
     Size of the majority:  {majority_size} of {number_of_delegates} ({round(majority_size/number_of_delegates * 100)}%)
     Expected Size:         {test_arr.count(1)}
     Number of compares:    {number_of_queries}
     Ideal num (n log(n)):  {nlogn}
     Runtime ratio:         {number_of_queries / nlogn}
-    """)
+    """
+    )

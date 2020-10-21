@@ -53,5 +53,5 @@ def majority_party_size_helper(delegates, same_party):
             maj_size = right_party_size
 
         return (maj_delegate, maj_size)
-    else: # Base case: single delegate -- only one possible majority here!
+    else:  # Base case: single delegate -- only one possible majority here!
         return (delegates[0], 1)
