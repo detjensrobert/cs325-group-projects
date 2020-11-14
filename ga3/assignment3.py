@@ -49,11 +49,6 @@ def calculate_best_move(board, red_pos, blue_pos, history):
     """
     Returns the minimum number of moves needed to solve VIL.
     Works recursively and (hopefully) memoizes as to not be awful.
-
-    Params:
-        board: the board as a matrix
-        red_pos, blue_pos: positions of the pieces as (x,y) tuples
-        history: dict of previously-calculated states
     """
 
     print(f"Checking r:{red_pos} b:{blue_pos}")
@@ -64,33 +59,74 @@ def calculate_best_move(board, red_pos, blue_pos, history):
     # check red positions
     # ===================
 
-    move_dist = board[red_pos[0]][red_pos[1]]
+    if red_pos != (
+        len(board) - 1,
+        len(board) - 1,
+    ):  # if red has made it, no need to move it anymore
+        move_dist = board[red_pos[0]][red_pos[1]]
 
-    def calc_red_move(board, red_pos, blue_pos, history):
-        if (red_pos, blue_pos) in history:
-            print(f"Hit cache: f{(red_pos, blue_pos)}")
-            move_results.append(history[(red_pos, blue_pos)])
-        else:
-            r = calculate_best_move(board, red_pos, blue_pos, history)
-            history[(red_pos, blue_pos)] = r
-            move_results.append(r)
+        # up
+        new_pos = (red_pos[0], red_pos[1] - move_dist)
+        if new_pos[1] >= 0 and new_pos != blue_pos:
+            move_results.append(calc_move(board, new_pos, blue_pos, history))
 
-    # up
-    new_pos = (red_pos[0], red_pos[1] - move_dist)
-    if new_pos[1] < 0 and new_pos != blue_pos:
-        calc_red_move(board, new_pos, blue_pos, history)
+        # down
+        new_pos = (red_pos[0], red_pos[1] + move_dist)
+        if new_pos[1] < len(board) and new_pos != blue_pos:
+            move_results.append(calc_move(board, new_pos, blue_pos, history))
 
-    # down
-    new_pos = (red_pos[0], red_pos[1] + move_dist)
-    if new_pos[1] >= len(board) and new_pos != blue_pos:
-        calc_red_move(board, new_pos, blue_pos, history)
+        # left
+        new_pos = (red_pos[0] - move_dist, red_pos[1])
+        if new_pos[0] >= 0 and new_pos != blue_pos:
+            move_results.append(calc_move(board, new_pos, blue_pos, history))
 
-    # left
-    new_pos = (red_pos[0] - move_dist, red_pos[1])
-    if new_pos[0] < 0 and new_pos != blue_pos:
-        calc_red_move(board, new_pos, blue_pos, history)
+        # right
+        new_pos = (red_pos[0] + move_dist, red_pos[1])
+        if new_pos[0] < len(board) and new_pos != blue_pos:
+            move_results.append(calc_move(board, new_pos, blue_pos, history))
 
-    # right
-    new_pos = (red_pos[0] + move_dist, red_pos[1])
-    if new_pos[0] >= len(board) and new_pos != blue_pos:
-        calc_red_move(board, new_pos, blue_pos, history)
+    # ===================
+    # check blue positions
+    # ===================
+
+    if blue_pos != (0, 0):  # if blue has made it, no need to move it anymore
+
+        move_dist = board[blue_pos[0]][blue_pos[1]]
+
+        # up
+        new_pos = (blue_pos[0], blue_pos[1] - move_dist)
+        if new_pos[1] >= 0 and new_pos != blue_pos:
+            move_results.append(calc_move(board, red_pos, new_pos, history))
+
+        # down
+        new_pos = (blue_pos[0], blue_pos[1] + move_dist)
+        if new_pos[1] < len(board) and new_pos != blue_pos:
+            move_results.append(calc_move(board, red_pos, new_pos, history))
+
+        # left
+        new_pos = (blue_pos[0] - move_dist, blue_pos[1])
+        if new_pos[0] >= 0 and new_pos != blue_pos:
+            move_results.append(calc_move(board, red_pos, new_pos, history))
+
+        # right
+        new_pos = (blue_pos[0] + move_dist, blue_pos[1])
+        if new_pos[0] < len(board) and new_pos != blue_pos:
+            move_results.append(calc_move(board, red_pos, new_pos, history))
+
+    best_move_count = min(move_results)
+    return best_move_count
+
+
+def calc_move(board, red_pos, blue_pos, history):
+    """
+    Returns the the cached result for the passed state, or calls
+    calculate_best_move if the cache misses.
+    """
+
+    if (red_pos, blue_pos) in history:
+        print(f"Hit cache: f{(red_pos, blue_pos)}")
+        return history[(red_pos, blue_pos)]
+    else:
+        r = calculate_best_move(board, red_pos, blue_pos, history)
+        history[(red_pos, blue_pos)] = r
+        return r
