@@ -1,4 +1,4 @@
-#import numpy  # for matrix printing
+# import numpy  # for matrix printing
 
 
 def vankin_max_score(input_file_path, output_file_path):
@@ -15,8 +15,8 @@ def vankin_max_score(input_file_path, output_file_path):
     board = [list(map(int, line.strip().split(","))) for line in board]
     scores = [[0 for _ in range(board_size)] for _ in range(board_size)]
 
-    #print(f"Board size: {board_size}x{board_size}")
-    #print(numpy.matrix(board))
+    # print(f"Board size: {board_size}x{board_size}")
+    # print(numpy.matrix(board))
 
     # iterate over board matrix backwards (with index)
     for i, row in reversed(list(enumerate(board))):
@@ -25,8 +25,8 @@ def vankin_max_score(input_file_path, output_file_path):
 
             max_score = max(scores[i][j], max_score)
 
-    #print("Scores:")
-    #print(numpy.matrix(scores))
+    # print("Scores:")
+    # print(numpy.matrix(scores))
 
     outfile.write(str(max_score))
     infile.close()
