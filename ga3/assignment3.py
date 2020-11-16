@@ -10,6 +10,7 @@
 
 import numpy  # for better matrix printing
 
+debug = True
 
 def vidrach_itky_leda(input_file_path, output_file_path):
     """
@@ -57,12 +58,13 @@ def gen_all_moves(board, red_pos, blue_pos, previous_moves, indent=0):
 
     current_moves = previous_moves + [(red_pos, blue_pos)]
 
-    print(" " * indent + f"Checking r{red_pos} b{blue_pos}")
-    a = [["-" for _ in row] for row in board]
-    a[red_pos[0]][red_pos[1]] = "R"
-    a[blue_pos[0]][blue_pos[1]] = "B"
-    # print(numpy.matrix(a))
-    print(" " * indent + f"Current move history: {current_moves}")
+    if debug:
+        print(" " * indent + f"Checking r{red_pos} b{blue_pos}")
+        a = [["-" for _ in row] for row in board]
+        a[red_pos[0]][red_pos[1]] = "R"
+        a[blue_pos[0]][blue_pos[1]] = "B"
+        # print(numpy.matrix(a))
+        print(" " * indent + f"Current move history: {current_moves}")
 
     # if we are at the end state, return the current moveset that got us here
     if red_pos == (board_size - 1, board_size - 1) and blue_pos == (0, 0):
@@ -87,6 +89,8 @@ def gen_all_moves(board, red_pos, blue_pos, previous_moves, indent=0):
             and (new_pos, blue_pos) not in previous_moves
         ):
             r = gen_all_moves(board, new_pos, blue_pos, current_moves, indent)
+            if debug:
+                print(" "*indent + f"returned: {r}")
             if len(r) > 0:
                 move_results.append(r)
 
@@ -98,6 +102,8 @@ def gen_all_moves(board, red_pos, blue_pos, previous_moves, indent=0):
             and (new_pos, blue_pos) not in previous_moves
         ):
             r = gen_all_moves(board, new_pos, blue_pos, current_moves, indent)
+            if debug:
+                print(" "*indent + f"returned: {r}")
             if len(r) > 0:
                 move_results.append(r)
 
@@ -109,6 +115,8 @@ def gen_all_moves(board, red_pos, blue_pos, previous_moves, indent=0):
             and (new_pos, blue_pos) not in previous_moves
         ):
             r = gen_all_moves(board, new_pos, blue_pos, current_moves, indent)
+            if debug:
+                print(" "*indent + f"returned: {r}")
             if len(r) > 0:
                 move_results.append(r)
 
@@ -120,6 +128,8 @@ def gen_all_moves(board, red_pos, blue_pos, previous_moves, indent=0):
             and (new_pos, blue_pos) not in previous_moves
         ):
             r = gen_all_moves(board, new_pos, blue_pos, current_moves, indent)
+            if debug:
+                print(" "*indent + f"returned: {r}")
             if len(r) > 0:
                 move_results.append(r)
 
@@ -135,6 +145,8 @@ def gen_all_moves(board, red_pos, blue_pos, previous_moves, indent=0):
             and (red_pos, new_pos) not in previous_moves
         ):
             r = gen_all_moves(board, new_pos, blue_pos, current_moves, indent)
+            if debug:
+                print(" "*indent + f"returned: {r}")
             if len(r) > 0:
                 move_results.append(r)
 
@@ -146,6 +158,8 @@ def gen_all_moves(board, red_pos, blue_pos, previous_moves, indent=0):
             and (red_pos, new_pos) not in previous_moves
         ):
             r = gen_all_moves(board, new_pos, blue_pos, current_moves, indent)
+            if debug:
+                print(" "*indent + f"returned: {r}")
             if len(r) > 0:
                 move_results.append(r)
 
@@ -157,6 +171,8 @@ def gen_all_moves(board, red_pos, blue_pos, previous_moves, indent=0):
             and (red_pos, new_pos) not in previous_moves
         ):
             r = gen_all_moves(board, new_pos, blue_pos, current_moves, indent)
+            if debug:
+                print(" "*indent + f"returned: {r}")
             if len(r) > 0:
                 move_results.append(r)
 
@@ -168,6 +184,8 @@ def gen_all_moves(board, red_pos, blue_pos, previous_moves, indent=0):
             and (red_pos, new_pos) not in previous_moves
         ):
             r = gen_all_moves(board, new_pos, blue_pos, current_moves, indent)
+            if debug:
+                print(" "*indent + f"returned: {r}")
             if len(r) > 0:
                 move_results.append(r)
 
