@@ -71,6 +71,7 @@ def gen_all_moves(board, red_pos, blue_pos, previous_moves, indent=0):
         print(" " * indent + "Reached the end!")
         return current_moves
 
+
     # otherwise, explore all moves we can do from here
     # if we run into a state we have already been to,
     # stop as its already been searched.
@@ -144,7 +145,7 @@ def gen_all_moves(board, red_pos, blue_pos, previous_moves, indent=0):
             and new_pos != red_pos
             and (red_pos, new_pos) not in previous_moves
         ):
-            r = gen_all_moves(board, new_pos, blue_pos, current_moves, indent)
+            r = gen_all_moves(board, red_pos, new_pos, current_moves, indent)
             if debug:
                 print(" "*indent + f"returned: {r}")
             if len(r) > 0:
@@ -157,7 +158,7 @@ def gen_all_moves(board, red_pos, blue_pos, previous_moves, indent=0):
             and new_pos != red_pos
             and (red_pos, new_pos) not in previous_moves
         ):
-            r = gen_all_moves(board, new_pos, blue_pos, current_moves, indent)
+            r = gen_all_moves(board, red_pos, new_pos, current_moves, indent)
             if debug:
                 print(" "*indent + f"returned: {r}")
             if len(r) > 0:
@@ -170,7 +171,7 @@ def gen_all_moves(board, red_pos, blue_pos, previous_moves, indent=0):
             and new_pos != red_pos
             and (red_pos, new_pos) not in previous_moves
         ):
-            r = gen_all_moves(board, new_pos, blue_pos, current_moves, indent)
+            r = gen_all_moves(board, red_pos, new_pos, current_moves, indent)
             if debug:
                 print(" "*indent + f"returned: {r}")
             if len(r) > 0:
@@ -183,7 +184,7 @@ def gen_all_moves(board, red_pos, blue_pos, previous_moves, indent=0):
             and new_pos != red_pos
             and (red_pos, new_pos) not in previous_moves
         ):
-            r = gen_all_moves(board, new_pos, blue_pos, current_moves, indent)
+            r = gen_all_moves(board, red_pos, new_pos, current_moves, indent)
             if debug:
                 print(" "*indent + f"returned: {r}")
             if len(r) > 0:
