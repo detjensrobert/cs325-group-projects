@@ -9,8 +9,10 @@
 """
 
 import numpy  # for better matrix printing
+import sys
 
-debug = True
+debug = False
+
 
 def vidrach_itky_leda(input_file_path, output_file_path):
     """
@@ -23,7 +25,6 @@ def vidrach_itky_leda(input_file_path, output_file_path):
     """
 
     infile = open(input_file_path, mode="r")
-    outfile = open(output_file_path, mode="w")
 
     board_size = int(infile.readline())
 
@@ -31,17 +32,19 @@ def vidrach_itky_leda(input_file_path, output_file_path):
     # split lines into each space & convert to ints
     board = [list(map(int, line.strip().split(","))) for line in board]
 
+    infile.close()
+
     red_pos = (0, 0)
     blue_pos = (board_size - 1, board_size - 1)
-    history = {}  # memoization state tracker, keyed by (red_pos, blue_pos)
 
-    print(f"Board size: {board_size}x{board_size}")
-    print(numpy.matrix(board))
+    if debug:
+        print(f"Board size: {board_size}x{board_size}")
+        print(numpy.matrix(board))
 
-    moves = gen_all_moves(board, red_pos, blue_pos, [])
+    moves = gen_all_moves(board, red_pos, blue_pos, []) - 1
 
+    outfile = open(output_file_path, mode="w")
     outfile.write(str(moves))
-    infile.close()
     outfile.close()
     return moves
 
@@ -49,7 +52,6 @@ def vidrach_itky_leda(input_file_path, output_file_path):
 def gen_all_moves(board, red_pos, blue_pos, previous_moves, indent=0):
     """
     Walks through all possible moves from the current position.
-    Adds all movesets that end at the final swapped state to successful_moves.
     """
 
     indent = indent + 4
@@ -68,19 +70,21 @@ def gen_all_moves(board, red_pos, blue_pos, previous_moves, indent=0):
 
     # if we are at the end state, return the current moveset that got us here
     if red_pos == (board_size - 1, board_size - 1) and blue_pos == (0, 0):
-        print(" " * indent + "Reached the end!")
-        return current_moves
+        if debug:
+            print(" " * indent + "Reached the end!")
+        return len(current_moves)
 
+    # if we have been here before, return the memoised state.
 
     # otherwise, explore all moves we can do from here
     # if we run into a state we have already been to,
     # stop as its already been searched.
 
-    move_results = [current_moves]
+    move_results = []
 
     # check all red moves
     if red_pos != (board_size - 1, board_size - 1):
-        move_dist = board[red_pos[0]][red_pos[1]]
+        move_dist = board[blue_pos[0]][blue_pos[1]]
 
         # up
         new_pos = (red_pos[0], red_pos[1] - move_dist)
@@ -91,9 +95,8 @@ def gen_all_moves(board, red_pos, blue_pos, previous_moves, indent=0):
         ):
             r = gen_all_moves(board, new_pos, blue_pos, current_moves, indent)
             if debug:
-                print(" "*indent + f"returned: {r}")
-            if len(r) > 0:
-                move_results.append(r)
+                print(" " * indent + f"returned: {r}")
+            move_results.append(r)
 
         # down
         new_pos = (red_pos[0], red_pos[1] + move_dist)
@@ -104,9 +107,8 @@ def gen_all_moves(board, red_pos, blue_pos, previous_moves, indent=0):
         ):
             r = gen_all_moves(board, new_pos, blue_pos, current_moves, indent)
             if debug:
-                print(" "*indent + f"returned: {r}")
-            if len(r) > 0:
-                move_results.append(r)
+                print(" " * indent + f"returned: {r}")
+            move_results.append(r)
 
         # left
         new_pos = (red_pos[0] - move_dist, red_pos[1])
@@ -117,9 +119,8 @@ def gen_all_moves(board, red_pos, blue_pos, previous_moves, indent=0):
         ):
             r = gen_all_moves(board, new_pos, blue_pos, current_moves, indent)
             if debug:
-                print(" "*indent + f"returned: {r}")
-            if len(r) > 0:
-                move_results.append(r)
+                print(" " * indent + f"returned: {r}")
+            move_results.append(r)
 
         # right
         new_pos = (red_pos[0] + move_dist, red_pos[1])
@@ -130,13 +131,12 @@ def gen_all_moves(board, red_pos, blue_pos, previous_moves, indent=0):
         ):
             r = gen_all_moves(board, new_pos, blue_pos, current_moves, indent)
             if debug:
-                print(" "*indent + f"returned: {r}")
-            if len(r) > 0:
-                move_results.append(r)
+                print(" " * indent + f"returned: {r}")
+            move_results.append(r)
 
     # check all blue moves
     if blue_pos != (0, 0):
-        move_dist = board[blue_pos[0]][blue_pos[1]]
+        move_dist = board[red_pos[0]][red_pos[1]]
 
         # up
         new_pos = (blue_pos[0], blue_pos[1] - move_dist)
@@ -147,9 +147,8 @@ def gen_all_moves(board, red_pos, blue_pos, previous_moves, indent=0):
         ):
             r = gen_all_moves(board, red_pos, new_pos, current_moves, indent)
             if debug:
-                print(" "*indent + f"returned: {r}")
-            if len(r) > 0:
-                move_results.append(r)
+                print(" " * indent + f"returned: {r}")
+            move_results.append(r)
 
         # down
         new_pos = (blue_pos[0], blue_pos[1] + move_dist)
@@ -160,9 +159,8 @@ def gen_all_moves(board, red_pos, blue_pos, previous_moves, indent=0):
         ):
             r = gen_all_moves(board, red_pos, new_pos, current_moves, indent)
             if debug:
-                print(" "*indent + f"returned: {r}")
-            if len(r) > 0:
-                move_results.append(r)
+                print(" " * indent + f"returned: {r}")
+            move_results.append(r)
 
         # left
         new_pos = (blue_pos[0] - move_dist, blue_pos[1])
@@ -173,9 +171,8 @@ def gen_all_moves(board, red_pos, blue_pos, previous_moves, indent=0):
         ):
             r = gen_all_moves(board, red_pos, new_pos, current_moves, indent)
             if debug:
-                print(" "*indent + f"returned: {r}")
-            if len(r) > 0:
-                move_results.append(r)
+                print(" " * indent + f"returned: {r}")
+            move_results.append(r)
 
         # right
         new_pos = (blue_pos[0] + move_dist, blue_pos[1])
@@ -186,11 +183,11 @@ def gen_all_moves(board, red_pos, blue_pos, previous_moves, indent=0):
         ):
             r = gen_all_moves(board, red_pos, new_pos, current_moves, indent)
             if debug:
-                print(" "*indent + f"returned: {r}")
-            if len(r) > 0:
-                move_results.append(r)
+                print(" " * indent + f"returned: {r}")
+            move_results.append(r)
 
-    return move_results
+    # find best path out of the ones given
+    return min(move_results, default=sys.maxsize)
 
     """
     tree
