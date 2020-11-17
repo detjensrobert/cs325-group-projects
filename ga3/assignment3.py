@@ -25,9 +25,8 @@ def vidrach_itky_leda(input_file_path, output_file_path):
 
     board_size = int(infile.readline())
 
-    board = infile.readlines()
     # split lines into each space & convert to ints
-    board = [list(map(int, line.strip().split(","))) for line in board]
+    board = [list(map(int, line.strip().split(","))) for line in infile.readlines()]
 
     infile.close()
 
@@ -153,3 +152,6 @@ def vidrach_actual(board):
             ):
                 posqueue.put((red_pos, new_pos))
                 moves[(red_pos, new_pos)] = curr_move + 1
+
+    # if queue has been exhausted and the end has not been reached
+    return -1
