@@ -8,12 +8,6 @@
     Also, I will use <python3> to run this code.
 """
 
-import numpy  # for better matrix printing
-import sys
-
-debug = False
-
-
 def vidrach_itky_leda(input_file_path, output_file_path):
     """
     This function will contain your code, it will read the input from the file
@@ -34,14 +28,11 @@ def vidrach_itky_leda(input_file_path, output_file_path):
 
     infile.close()
 
-    red_pos = (0, 0)
-    blue_pos = (board_size - 1, board_size - 1)
+    # import numpy
+    # print(f"Board size: {board_size}x{board_size}")
+    # print(numpy.matrix(board))
 
-    if debug:
-        print(f"Board size: {board_size}x{board_size}")
-        print(numpy.matrix(board))
-
-    moves = gen_all_moves(board, red_pos, blue_pos, []) - 1
+    moves = vidrach_actual(board)
 
     outfile = open(output_file_path, mode="w")
     outfile.write(str(moves))
@@ -49,152 +40,113 @@ def vidrach_itky_leda(input_file_path, output_file_path):
     return moves
 
 
-def gen_all_moves(board, red_pos, blue_pos, previous_moves, indent=0):
+def vidrach_actual(board):
     """
-    Walks through all possible moves from the current position.
+    Walks the board using a breadth-first alg and a queue.
     """
-
-    indent = indent + 4
-
     board_size = len(board)
 
-    current_moves = previous_moves + [(red_pos, blue_pos)]
+    posqueue = [
+        ((0, 0), (board_size - 1, board_size - 1))
+    ]  # coordinates queue - list of (red_pos, blue_pos) tuples
+    movequeue = [0]  # no. of moves needed to get to corresponding posqueue entry
 
-    if debug:
-        print(" " * indent + f"Checking r{red_pos} b{blue_pos}")
-        a = [["-" for _ in row] for row in board]
-        a[red_pos[0]][red_pos[1]] = "R"
-        a[blue_pos[0]][blue_pos[1]] = "B"
-        # print(numpy.matrix(a))
-        print(" " * indent + f"Current move history: {current_moves}")
+    previous_moves = {}
 
-    # if we are at the end state, return the current moveset that got us here
-    if red_pos == (board_size - 1, board_size - 1) and blue_pos == (0, 0):
-        if debug:
-            print(" " * indent + "Reached the end!")
-        return len(current_moves)
+    for curr_pos, curr_move in zip(posqueue, movequeue):
+        previous_moves[curr_pos] = curr_move
 
-    # if we have been here before, return the memoised state.
+        red_pos = curr_pos[0]
+        blue_pos = curr_pos[1]
 
-    # otherwise, explore all moves we can do from here
-    # if we run into a state we have already been to,
-    # stop as its already been searched.
+        # if at the swapped position, break/return as this is the fastest
+        if red_pos == (board_size - 1, board_size - 1) and blue_pos == (0, 0):
+            return curr_move
 
-    move_results = []
+        # check all red moves
+        if red_pos != (board_size - 1, board_size - 1):
+            move_dist = board[blue_pos[0]][blue_pos[1]]
 
-    # check all red moves
-    if red_pos != (board_size - 1, board_size - 1):
-        move_dist = board[blue_pos[0]][blue_pos[1]]
+            # up
+            new_pos = (red_pos[0], red_pos[1] - move_dist)
+            if (  # if in-bounds, not occupied, and has not been visited before
+                new_pos[1] >= 0
+                and new_pos != blue_pos
+                and (new_pos, blue_pos) not in previous_moves
+            ):
+                posqueue.append((new_pos, blue_pos))
+                movequeue.append(curr_move + 1)
 
-        # up
-        new_pos = (red_pos[0], red_pos[1] - move_dist)
-        if (  # if in-bounds, not occupied, and has not been visited before
-            new_pos[1] >= 0
-            and new_pos != blue_pos
-            and (new_pos, blue_pos) not in previous_moves
-        ):
-            r = gen_all_moves(board, new_pos, blue_pos, current_moves, indent)
-            if debug:
-                print(" " * indent + f"returned: {r}")
-            move_results.append(r)
+            # down
+            new_pos = (red_pos[0], red_pos[1] + move_dist)
+            if (  # if in-bounds, not occupied, and has not been visited before
+                new_pos[1] < board_size
+                and new_pos != blue_pos
+                and (new_pos, blue_pos) not in previous_moves
+            ):
+                posqueue.append((new_pos, blue_pos))
+                movequeue.append(curr_move + 1)
 
-        # down
-        new_pos = (red_pos[0], red_pos[1] + move_dist)
-        if (  # if in-bounds, not occupied, and has not been visited before
-            new_pos[1] < len(board)
-            and new_pos != blue_pos
-            and (new_pos, blue_pos) not in previous_moves
-        ):
-            r = gen_all_moves(board, new_pos, blue_pos, current_moves, indent)
-            if debug:
-                print(" " * indent + f"returned: {r}")
-            move_results.append(r)
+            # left
+            new_pos = (red_pos[0] - move_dist, red_pos[1])
+            if (  # if in-bounds, not occupied, and has not been visited before
+                new_pos[0] >= 0
+                and new_pos != blue_pos
+                and (new_pos, blue_pos) not in previous_moves
+            ):
+                posqueue.append((new_pos, blue_pos))
+                movequeue.append(curr_move + 1)
 
-        # left
-        new_pos = (red_pos[0] - move_dist, red_pos[1])
-        if (  # if in-bounds, not occupied, and has not been visited before
-            new_pos[0] >= 0
-            and new_pos != blue_pos
-            and (new_pos, blue_pos) not in previous_moves
-        ):
-            r = gen_all_moves(board, new_pos, blue_pos, current_moves, indent)
-            if debug:
-                print(" " * indent + f"returned: {r}")
-            move_results.append(r)
+            # right
+            new_pos = (red_pos[0] + move_dist, red_pos[1])
+            if (  # if in-bounds, not occupied, and has not been visited before
+                new_pos[0] < board_size
+                and new_pos != blue_pos
+                and (new_pos, blue_pos) not in previous_moves
+            ):
+                posqueue.append((new_pos, blue_pos))
+                movequeue.append(curr_move + 1)
 
-        # right
-        new_pos = (red_pos[0] + move_dist, red_pos[1])
-        if (  # if in-bounds, not occupied, and has not been visited before
-            new_pos[0] < len(board)
-            and new_pos != blue_pos
-            and (new_pos, blue_pos) not in previous_moves
-        ):
-            r = gen_all_moves(board, new_pos, blue_pos, current_moves, indent)
-            if debug:
-                print(" " * indent + f"returned: {r}")
-            move_results.append(r)
+        # check all blue moves
+        if blue_pos != (0, 0):
+            move_dist = board[red_pos[0]][red_pos[1]]
 
-    # check all blue moves
-    if blue_pos != (0, 0):
-        move_dist = board[red_pos[0]][red_pos[1]]
+            # up
+            new_pos = (blue_pos[0], blue_pos[1] - move_dist)
+            if (  # if in-bounds, not occupied, and has not been visited before
+                new_pos[1] >= 0
+                and new_pos != red_pos
+                and (red_pos, new_pos) not in previous_moves
+            ):
+                posqueue.append((red_pos, new_pos))
+                movequeue.append(curr_move + 1)
 
-        # up
-        new_pos = (blue_pos[0], blue_pos[1] - move_dist)
-        if (  # if in-bounds, not occupied, and has not been visited before
-            new_pos[1] >= 0
-            and new_pos != red_pos
-            and (red_pos, new_pos) not in previous_moves
-        ):
-            r = gen_all_moves(board, red_pos, new_pos, current_moves, indent)
-            if debug:
-                print(" " * indent + f"returned: {r}")
-            move_results.append(r)
+            # down
+            new_pos = (blue_pos[0], blue_pos[1] + move_dist)
+            if (  # if in-bounds, not occupied, and has not been visited before
+                new_pos[1] < board_size
+                and new_pos != red_pos
+                and (red_pos, new_pos) not in previous_moves
+            ):
+                posqueue.append((red_pos, new_pos))
+                movequeue.append(curr_move + 1)
 
-        # down
-        new_pos = (blue_pos[0], blue_pos[1] + move_dist)
-        if (  # if in-bounds, not occupied, and has not been visited before
-            new_pos[1] < len(board)
-            and new_pos != red_pos
-            and (red_pos, new_pos) not in previous_moves
-        ):
-            r = gen_all_moves(board, red_pos, new_pos, current_moves, indent)
-            if debug:
-                print(" " * indent + f"returned: {r}")
-            move_results.append(r)
+            # left
+            new_pos = (blue_pos[0] - move_dist, blue_pos[1])
+            if (  # if in-bounds, not occupied, and has not been visited before
+                new_pos[0] >= 0
+                and new_pos != red_pos
+                and (red_pos, new_pos) not in previous_moves
+            ):
+                posqueue.append((red_pos, new_pos))
+                movequeue.append(curr_move + 1)
 
-        # left
-        new_pos = (blue_pos[0] - move_dist, blue_pos[1])
-        if (  # if in-bounds, not occupied, and has not been visited before
-            new_pos[0] >= 0
-            and new_pos != red_pos
-            and (red_pos, new_pos) not in previous_moves
-        ):
-            r = gen_all_moves(board, red_pos, new_pos, current_moves, indent)
-            if debug:
-                print(" " * indent + f"returned: {r}")
-            move_results.append(r)
-
-        # right
-        new_pos = (blue_pos[0] + move_dist, blue_pos[1])
-        if (  # if in-bounds, not occupied, and has not been visited before
-            new_pos[0] < len(board)
-            and new_pos != red_pos
-            and (red_pos, new_pos) not in previous_moves
-        ):
-            r = gen_all_moves(board, red_pos, new_pos, current_moves, indent)
-            if debug:
-                print(" " * indent + f"returned: {r}")
-            move_results.append(r)
-
-    # find best path out of the ones given
-    return min(move_results, default=sys.maxsize)
-
-    """
-    tree
-    of all moves
-    remove leafs that do not end
-
-    return true if at end state
-    return false if we've been everywhere
-    recursively call
-    """
+            # right
+            new_pos = (blue_pos[0] + move_dist, blue_pos[1])
+            if (  # if in-bounds, not occupied, and has not been visited before
+                new_pos[0] < board_size
+                and new_pos != red_pos
+                and (red_pos, new_pos) not in previous_moves
+            ):
+                posqueue.append((red_pos, new_pos))
+                movequeue.append(curr_move + 1)
