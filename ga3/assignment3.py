@@ -8,6 +8,9 @@
     Also, I will use <python3> to run this code.
 """
 
+import queue
+
+
 def vidrach_itky_leda(input_file_path, output_file_path):
     """
     This function will contain your code, it will read the input from the file
@@ -46,15 +49,15 @@ def vidrach_actual(board):
     """
     board_size = len(board)
 
-    posqueue = [
-        ((0, 0), (board_size - 1, board_size - 1))
-    ]  # coordinates queue - list of (red_pos, blue_pos) tuples
-    movequeue = [0]  # no. of moves needed to get to corresponding posqueue entry
+    # coordinates queue - list of (red_pos, blue_pos) tuples
+    posqueue = queue.SimpleQueue()
+    posqueue.put(((0, 0), (board_size - 1, board_size - 1)))
 
-    previous_moves = {}
+    moves = {((0, 0), (board_size - 1, board_size - 1)): 0}
 
-    for curr_pos, curr_move in zip(posqueue, movequeue):
-        previous_moves[curr_pos] = curr_move
+    while not posqueue.empty():
+        curr_pos = posqueue.get()
+        curr_move = moves[curr_pos]
 
         red_pos = curr_pos[0]
         blue_pos = curr_pos[1]
@@ -72,40 +75,40 @@ def vidrach_actual(board):
             if (  # if in-bounds, not occupied, and has not been visited before
                 new_pos[1] >= 0
                 and new_pos != blue_pos
-                and (new_pos, blue_pos) not in previous_moves
+                and (new_pos, blue_pos) not in moves
             ):
-                posqueue.append((new_pos, blue_pos))
-                movequeue.append(curr_move + 1)
+                posqueue.put((new_pos, blue_pos))
+                moves[(new_pos, blue_pos)] = curr_move + 1
 
             # down
             new_pos = (red_pos[0], red_pos[1] + move_dist)
             if (  # if in-bounds, not occupied, and has not been visited before
                 new_pos[1] < board_size
                 and new_pos != blue_pos
-                and (new_pos, blue_pos) not in previous_moves
+                and (new_pos, blue_pos) not in moves
             ):
-                posqueue.append((new_pos, blue_pos))
-                movequeue.append(curr_move + 1)
+                posqueue.put((new_pos, blue_pos))
+                moves[(new_pos, blue_pos)] = curr_move + 1
 
             # left
             new_pos = (red_pos[0] - move_dist, red_pos[1])
             if (  # if in-bounds, not occupied, and has not been visited before
                 new_pos[0] >= 0
                 and new_pos != blue_pos
-                and (new_pos, blue_pos) not in previous_moves
+                and (new_pos, blue_pos) not in moves
             ):
-                posqueue.append((new_pos, blue_pos))
-                movequeue.append(curr_move + 1)
+                posqueue.put((new_pos, blue_pos))
+                moves[(new_pos, blue_pos)] = curr_move + 1
 
             # right
             new_pos = (red_pos[0] + move_dist, red_pos[1])
             if (  # if in-bounds, not occupied, and has not been visited before
                 new_pos[0] < board_size
                 and new_pos != blue_pos
-                and (new_pos, blue_pos) not in previous_moves
+                and (new_pos, blue_pos) not in moves
             ):
-                posqueue.append((new_pos, blue_pos))
-                movequeue.append(curr_move + 1)
+                posqueue.put((new_pos, blue_pos))
+                moves[(new_pos, blue_pos)] = curr_move + 1
 
         # check all blue moves
         if blue_pos != (0, 0):
@@ -116,37 +119,37 @@ def vidrach_actual(board):
             if (  # if in-bounds, not occupied, and has not been visited before
                 new_pos[1] >= 0
                 and new_pos != red_pos
-                and (red_pos, new_pos) not in previous_moves
+                and (red_pos, new_pos) not in moves
             ):
-                posqueue.append((red_pos, new_pos))
-                movequeue.append(curr_move + 1)
+                posqueue.put((red_pos, new_pos))
+                moves[(red_pos, new_pos)] = curr_move + 1
 
             # down
             new_pos = (blue_pos[0], blue_pos[1] + move_dist)
             if (  # if in-bounds, not occupied, and has not been visited before
                 new_pos[1] < board_size
                 and new_pos != red_pos
-                and (red_pos, new_pos) not in previous_moves
+                and (red_pos, new_pos) not in moves
             ):
-                posqueue.append((red_pos, new_pos))
-                movequeue.append(curr_move + 1)
+                posqueue.put((red_pos, new_pos))
+                moves[(red_pos, new_pos)] = curr_move + 1
 
             # left
             new_pos = (blue_pos[0] - move_dist, blue_pos[1])
             if (  # if in-bounds, not occupied, and has not been visited before
                 new_pos[0] >= 0
                 and new_pos != red_pos
-                and (red_pos, new_pos) not in previous_moves
+                and (red_pos, new_pos) not in moves
             ):
-                posqueue.append((red_pos, new_pos))
-                movequeue.append(curr_move + 1)
+                posqueue.put((red_pos, new_pos))
+                moves[(red_pos, new_pos)] = curr_move + 1
 
             # right
             new_pos = (blue_pos[0] + move_dist, blue_pos[1])
             if (  # if in-bounds, not occupied, and has not been visited before
                 new_pos[0] < board_size
                 and new_pos != red_pos
-                and (red_pos, new_pos) not in previous_moves
+                and (red_pos, new_pos) not in moves
             ):
-                posqueue.append((red_pos, new_pos))
-                movequeue.append(curr_move + 1)
+                posqueue.put((red_pos, new_pos))
+                moves[(red_pos, new_pos)] = curr_move + 1
