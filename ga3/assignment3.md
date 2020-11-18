@@ -20,13 +20,19 @@ In order to solve this problem efficiently, we implemented an iterative breadth-
 
 As we iterate through the queue, all possible moves from the current state are checked. For every state possibility, there will be 8 possible moves from the current state: moving red or blue up, down, left, or right. For each of these moves, we check if the new state is valid: that is, the new position is in bounds, not occupied by the other piece, and is not in the dictionary. If that state is indeed valid, we add it to the end queue and record the moves needed to achieve that score in the dictionary.
 
-If the end state is reached -- where the two pieces have swapped starting positions -- we have reached the shortest path to the end state and record the moves needed to get here from the dictionary. If the queue is exhausted, all valid states have been visited without reaching the end node and we return $-1$.
+If the end state is reached -- where the two pieces have swapped starting positions -- we have reached the shortest path to the end state and record the moves needed to get here from the dictionary. If the queue is exhausted without reaching the end state, the board cannot be solved and we return $-1$.
 
 $\pagebreak$
 
 ### Runtime Analysis
 
-The runtime of a breadth-first search (BVS) is $O(V + E)$, where $V$ is the number of vertices and $E$ is the number of edges. In this case, the BFS creates a partially-completed graph of the state space, as not every possibility is required -- only the ones needed to reach the final end state. The worst-case number of verticies is $n^4 - n^2$, or $n^4$, where $n$ is one of the sides of the grid. The total number of possible locations for one piece on the board is $n^2$. For two pieces, the number of states is squared for $n^4$. As the pieces cannot occupy the same square at the same time, $n^2$ possible states are removed. Similarly, the number of edges are $c * n^4$, where $c$ is an arbitrary constant. The edges of the BFS are organized and are nott cyclic, so there are a maximum of 4 connections per vertex. For $n^4$ vertices, then there are $4 * n^4$ edges. All together, the runtime of this algorithm is $O(n^4 + 4n^4) = O(5n^4) = \bold{O(n^4)}$.
+The runtime of a breadth-first search (BVS) is $O(V + E)$, where $V$ is the number of vertices and $E$ is the number of edges. In this case, the BFS creates a partially-completed graph of the state space, as not every possibility is required -- only the ones needed to reach the final end state. 
+
+The worst-case number of vertices is $n^4 - n^2$, where $n$ is one of the sides of the grid. The total number of possible locations for one piece on the board is $n^2$. For two pieces, the number of states is squared to get $n^4$ possible states. As the pieces cannot occupy the same square at the same time, $n^2$ possible states are removed. 
+
+Similarly, the number of edges are $c * n^4$, where $c$ is an arbitrary constant. The edges of the BFS are organized and are not cyclic, so there are a maximum of 8 connections per vertex. For $n^4$ vertices, then there are $8 * n^4$ edges.
+
+All together, the runtime of this algorithm is $O(n^4 - n^2 + 8n^4) = O(9n^4) = \bold{O(n^4)}$.
 
 ### Proof of Correctness
 
