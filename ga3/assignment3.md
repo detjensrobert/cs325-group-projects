@@ -22,10 +22,11 @@ As we iterate through the queue, all possible moves from the current state are c
 
 If the end state is reached -- where the two pieces have swapped starting positions -- we have reached the shortest path to the end state and record the moves needed to get here from the dictionary. If the queue is exhausted, all valid states have been visited without reaching the end node and we return $-1$.
 
+$\pagebreak$
 
 ### Runtime Analysis
 
-We know that the runtime of a BFS is O(V + E), where V is the number of vertices, and E is the number of edges. In this case, the BFS is essentially creating a partially-completed graph of the state space, as it doesn't require every single possibility, but rather the states required (and some change) to reach the final end state via the actions taken. The worst case number of verticies is $n^4 - n^2$, or $n^4$, where $n$ is one of the sides of the grid. This is because the total number of possible squares for the red token to be in is $n^2$, and for the blue token is also $n^2$, and they cannot be in the same square at the same time, resulting in a $-n^2$. Similarly, the number of edges are $c * n^4$, where $c$ is an arbitrary constant. The edges of the BFS are organized and aren't cyclic, so there are a maximum of 4 connections per vertex, and if there are $n^4$ vertices, then there are $4 * n^4$ edges. In terms of time with respect to n: $O(n^4 + 4n^4) = O(n^4)$. Therefore, the time for this algorithm is $O(n^4)$.
+The runtime of a breadth-first search (BVS) is $O(V + E)$, where $V$ is the number of vertices and $E$ is the number of edges. In this case, the BFS creates a partially-completed graph of the state space, as not every possibility is required -- only the ones needed to reach the final end state. The worst-case number of verticies is $n^4 - n^2$, or $n^4$, where $n$ is one of the sides of the grid. The total number of possible locations for one piece on the board is $n^2$. For two pieces, the number of states is squared for $n^4$. As the pieces cannot occupy the same square at the same time, $n^2$ possible states are removed. Similarly, the number of edges are $c * n^4$, where $c$ is an arbitrary constant. The edges of the BFS are organized and are nott cyclic, so there are a maximum of 4 connections per vertex. For $n^4$ vertices, then there are $4 * n^4$ edges. All together, the runtime of this algorithm is $O(n^4 + 4n^4)$, or just $O(n^4)$.
 
 ### Proof of Correctness
 
