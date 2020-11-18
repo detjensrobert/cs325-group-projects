@@ -30,9 +30,9 @@ The runtime of a breadth-first search (BVS) is $O(V + E)$, where $V$ is the numb
 
 ### Proof of Correctness
 
-First, we need to describe the mechanics of our BFS, using these two statements:
+First, we need to describe the mechanics of our BFS using these two statements:
 
-1) A path of length k in the graph gives a winning strategy with k moves.
-2) A winning strategy with k moves gives a (0, n-1) -> (n-1, 0) path of length k.
+1) A path of length $k$ in the graph gives a winning strategy with $k$ moves.
+2) A winning strategy with $k$ moves gives a $((0,0), (n-1,n-1)) \rightarrow ((n-1,n-1), (0,0))$ path of length $k$.
 
-These statements, along with the fact that BFS is proven to give the shortest path, prove that the minimum length of the graph gives us the minimum number of moves to win the game.
+These statements, along with the fact that a BFS gives the shortest path, prove that the minimum length of the graph is the minimum number of moves to win the game.
