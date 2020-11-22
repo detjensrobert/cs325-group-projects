@@ -7,15 +7,6 @@
 # Also, I will use <python3> to run this code.
 
 import queue
-import sys
-import numpy
-
-debug = True
-
-
-def p(msg):
-    if debug:
-        print(msg)
 
 
 def first_second_third_mst(input_file_path, output_file_path):
@@ -37,25 +28,32 @@ def first_second_third_mst(input_file_path, output_file_path):
 
     infile.close()
 
-    tree_weights = (
-        calc_first(graph, graph_size),
-        calc_second(graph, graph_size),
-        calc_third(graph, graph_size),
-    )
+    first_mst = calc_mst(graph, graph_size)
+
+    possible_results = []
+    for w in first_mst[1:]:
+        old_val = graph[w[0]][w[1]]
+        graph[w[0]][w[1]] = -1
+        r = sum(list(map(lambda w: graph[w[0]][w[1]], calc_mst(graph, graph_size))))
+        possible_results.append(r)
+        graph[w[0]][w[1]] = old_val
+
+    possible_results = sorted(possible_results)
+
+    first = sum(list(map(lambda w: graph[w[0]][w[1]], first_mst)))
+    second = possible_results[0]
+    third = possible_results[1]
 
     outfile = open(output_file_path, mode="w")
-    outfile.write("\n".join(map(str, tree_weights)))
+    outfile.write(f"{first}\n{second}\n{third}\n")
     outfile.close()
-    return tree_weights
+    return (first, second, third)
 
 
 def calc_mst(graph, graph_size):
     nodequeue = queue.PriorityQueue()
-    weights = []
+    connections = []
     visited = {}
-
-    p("Current graph:")
-    p(numpy.matrix(graph))
 
     # add initial node
     # queue format: (weight, from_node, to_node)
@@ -63,66 +61,16 @@ def calc_mst(graph, graph_size):
 
     while not nodequeue.empty():
         queue_elem = nodequeue.get()
-        weight = queue_elem[0]
         parent = queue_elem[1]
         node = queue_elem[2]
 
         if node not in visited:
-            p(f"on: {parent}->{node} ({weight})")
+            # p(f"on: {parent}->{node} ({weight})")
             visited[node] = True
-            weights.append((parent, node))
+            connections.append((parent, node))
 
             for dest_node, dest_weight in enumerate(graph[node]):
-                if dest_weight == -1:  # -1 disables the connection, so ignore it
-                    continue
-                nodequeue.put((dest_weight, node, dest_node))
+                if dest_weight != -1:  # -1 disables the connection, so ignore it
+                    nodequeue.put((dest_weight, node, dest_node))
 
-    return weights
-
-
-def calc_first(graph, graph_size):
-    p("=== FIRST ===")
-
-    weights = calc_mst(graph, graph_size)
-
-    return sum(list(map(lambda w: graph[w[0]][w[1]], weights)))
-
-
-def calc_second(graph, graph_size):
-    p("=== SECOND ===")
-
-    weights = calc_mst(graph, graph_size)
-
-    # find largest connection, disable it to find next best MST
-    big = max(weights, key=lambda w: graph[w[0]][w[1]])
-    p(f"worst connection: {big[0]}->{big[1]} ({graph[big[0]][big[1]]})")
-
-    graph[big[0]][big[1]] = -1
-
-    weights = calc_mst(graph, graph_size)
-
-    return sum(list(map(lambda w: graph[w[0]][w[1]], weights)))
-
-
-def calc_third(graph, graph_size):
-    p("=== THIRD ===")
-
-    weights = calc_mst(graph, graph_size)
-
-    # find largest connection, disable it to find next best MST
-    big = max(weights, key=lambda w: graph[w[0]][w[1]])
-    p(f"worst connection: {big[0]}->{big[1]} ({graph[big[0]][big[1]]})")
-
-    graph[big[0]][big[1]] = -1
-
-    weights = calc_mst(graph, graph_size)
-
-    # find largest connection, disable it to find next best MST
-    big = max(weights, key=lambda w: graph[w[0]][w[1]])
-    p(f"worst connection: {big[0]}->{big[1]} ({graph[big[0]][big[1]]})")
-
-    graph[big[0]][big[1]] =  -1
-
-    weights = calc_mst(graph, graph_size)
-
-    return sum(list(map(lambda w: graph[w[0]][w[1]], weights)))
+    return connections
