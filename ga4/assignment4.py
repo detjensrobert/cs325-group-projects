@@ -32,15 +32,15 @@ def first_second_third_mst(input_file_path, output_file_path):
 
     # try removing each connection in the MST and recalculating the total weight
     possible_results = []
-    for w in first_mst:
-        old_val = graph[w[0]][w[1]]
-        graph[w[0]][w[1]] = -1
-        r = sum(list(map(lambda w: graph[w[0]][w[1]], calc_mst(graph, graph_size))))
+    for p, c in first_mst:
+        old_val = graph[p][c]
+        graph[p][c] = -1
+        r = sum([graph[p][c] for p, c in calc_mst(graph, graph_size)])
         possible_results.append(r)
-        graph[w[0]][w[1]] = old_val
+        graph[p][c] = old_val
 
     possible_results.sort()
-    first = possible_results[0]+1 # removing the initial (0,0,0) connection :bigbrain:
+    first = possible_results[0] + 1
     second = possible_results[1]
     third = possible_results[2]
 
