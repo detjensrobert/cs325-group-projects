@@ -28,21 +28,20 @@ def first_second_third_mst(input_file_path, output_file_path):
 
     infile.close()
 
-    first_mst = calc_mst(graph, graph_size)
+    first_mst = calc_mst(graph, graph_size)["connections"]
 
     # try removing each connection in the MST and recalculating the total weight
-    possible_results = []
+    weights = []
     for p, c in first_mst:
         old_val = graph[p][c]
         graph[p][c] = -1
-        r = sum([graph[p][c] for p, c in calc_mst(graph, graph_size)])
-        possible_results.append(r)
+        weights.append(calc_mst(graph, graph_size)["total_weight"])
         graph[p][c] = old_val
 
-    possible_results.sort()
-    first = possible_results[0] + 1
-    second = possible_results[1]
-    third = possible_results[2]
+    weights.sort()
+    first = weights[0] + 1
+    second = weights[1]
+    third = weights[2]
 
     outfile = open(output_file_path, mode="w")
     outfile.write(f"{first}\n{second}\n{third}\n")
@@ -58,6 +57,7 @@ def calc_mst(graph, graph_size):
     # add initial node
     # queue format: (weight, from_node, to_node)
     nodequeue.put((0, 0, 0))
+    weight = 0
 
     while not nodequeue.empty():
         queue_elem = nodequeue.get()
@@ -67,9 +67,10 @@ def calc_mst(graph, graph_size):
         if node not in visited:
             visited[node] = True
             connections.append((parent, node))
+            weight += graph[parent][node]
 
             for dest_node, dest_weight in enumerate(graph[node]):
                 if dest_weight != -1:  # -1 disables the connection, so ignore it
                     nodequeue.put((dest_weight, node, dest_node))
 
-    return connections
+    return {"connections": connections, "total_weight": weight}
